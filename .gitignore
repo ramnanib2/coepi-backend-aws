@@ -1,0 +1,4 @@
+.DS_Store*
+.gradle*
+.swagger-codegen*
+Dockerfile*

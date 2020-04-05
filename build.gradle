@@ -1,0 +1,70 @@
+buildscript {
+    ext.kotlin_version = '1.3.50'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.50'
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+group 'org.coepi'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "org.apache.commons:commons-lang3:3.10"
+    compile "com.amazonaws:aws-java-sdk-dynamodb:1.11.755"
+    compile "com.amazonaws:aws-java-sdk-s3:1.11.755"
+    //compile "com.amazonaws:aws-aws-java-sdk-lambda:1.11.755"
+    compile "com.amazonaws:aws-lambda-java-core:1.2.0"
+    compile "com.amazonaws:aws-lambda-java-events:2.2.7"
+    compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
+    compile "commons-io:commons-io:2.6"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.10.3"
+    compile "com.fasterxml.jackson.core:jackson-core:2.10.3"
+    compile "com.fasterxml.jackson.core:jackson-annotations:2.10.3"
+
+    testImplementation(
+            'org.assertj:assertj-core:3.12.2',
+            'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    )
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
+
+}
+
+// TODO: Use a gradle plugin to generate models, example (https://github.com/Yelp/swagger-gradle-codegen).
+// Right now, need to use swagger CLI
+// swagger-codegen generate --lang kotlin-server --input-spec api_definition/coepi_api_0.3.0.yml --model-package org.coepi.api.models -Dmodels
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.compileClasspath
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
