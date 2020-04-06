@@ -52,21 +52,20 @@ paths:
           description: Internal Server Error
 
 
-  /cenreport/{timestampLower}/{timestampUpper}:
     get:
-      summary: Returns a list of reports generated between a timestamp range
+      summary: Returns a list of reports generated between a timestamp range. The range cannot be greater than 5 days
       parameters:
-      - in: path
+      - in: query
         name: timestampLower
         description: Lower limit timestamp in UTC for which we need the reports. If not provided, returns all reports for current timestamp
         required: false
         schema:
           $ref: '#/components/schemas/Timestamp'
         example: 1585326048
-      - in: path
+      - in: query
         name: timestampUpper
         description: Upper limit timestamp in UTC for which we need the reports. If not specified, default is the current timestamp
-        required: true
+        required: false
         schema:
           $ref: '#/components/schemas/Timestamp'
         example: 1585327048

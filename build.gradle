@@ -3,7 +3,6 @@ buildscript {
 
     repositories {
         mavenCentral()
-        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -30,7 +29,6 @@ dependencies {
     compile "org.apache.commons:commons-lang3:3.10"
     compile "com.amazonaws:aws-java-sdk-dynamodb:1.11.755"
     compile "com.amazonaws:aws-java-sdk-s3:1.11.755"
-    //compile "com.amazonaws:aws-aws-java-sdk-lambda:1.11.755"
     compile "com.amazonaws:aws-lambda-java-core:1.2.0"
     compile "com.amazonaws:aws-lambda-java-events:2.2.7"
     compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
@@ -44,20 +42,11 @@ dependencies {
             'org.junit.jupiter:junit-jupiter-api:5.4.2'
     )
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
-
 }
 
 // TODO: Use a gradle plugin to generate models, example (https://github.com/Yelp/swagger-gradle-codegen).
 // Right now, need to use swagger CLI
 // swagger-codegen generate --lang kotlin-server --input-spec api_definition/coepi_api_0.3.0.yml --model-package org.coepi.api.models -Dmodels
-
-task buildZip(type: Zip) {
-    from compileJava
-    from processResources
-    into('lib') {
-        from configurations.compileClasspath
-    }
-}
 
 test {
     useJUnitPlatform()

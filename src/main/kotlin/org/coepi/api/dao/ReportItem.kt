@@ -8,7 +8,7 @@ data class ReportItem (
         var did: String = "",
 
         @DynamoDBRangeKey
-        var timestamp: Long = 0,
+        var reportTimestamp: Long = 0,
 
         @DynamoDBAttribute
         var report: ByteArray = byteArrayOf(),
