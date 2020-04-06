@@ -72,6 +72,9 @@ class CoEpiHandler: RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyR
         var timestampLower = Optional.empty<Long>()
         var timestampUpper = Optional.empty<Long>()
 
+        if (queryParameters == null) return Pair(timestampLower, timestampUpper)
+
+
         try {
             if(queryParameters.containsKey(TIMESTAMP_LOWER_KEY)) {
                 val tl = queryParameters[TIMESTAMP_LOWER_KEY]?.toLong()
