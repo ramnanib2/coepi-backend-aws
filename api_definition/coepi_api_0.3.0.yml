@@ -53,7 +53,7 @@ paths:
 
 
     get:
-      summary: Returns a list of reports generated between a timestamp range. The range cannot be greater than 5 days
+      summary: Returns a list of reports generated between a timestamp range provided through query paramaters. If no range is provided, the returns all reports for the current day. If only timestampLower is provided, returns all reports in the range [timestampLower, now]. Range cannot be greater than 5 days.
       parameters:
       - in: query
         name: timestampLower
