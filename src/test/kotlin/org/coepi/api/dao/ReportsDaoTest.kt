@@ -1,6 +1,5 @@
 package org.coepi.api.dao
 
-import jdk.nashorn.internal.ir.annotations.Ignore
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -17,7 +16,6 @@ import java.util.*
  *
  * Until then, don't expect them to succeed, just use them as documentation
  */
-@Ignore
 @Disabled
 class ReportsDaoTest {
 
