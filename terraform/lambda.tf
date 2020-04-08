@@ -1,5 +1,5 @@
-resource "aws_iam_role" "iam_for_lambda" {
-  name = "iam_for_lambda"
+resource "aws_iam_role" "coepi_lambda_backend_role" {
+  name = "iam_for_coepi_lambda"
 
   assume_role_policy = <<EOF
 {
@@ -18,22 +18,82 @@ resource "aws_iam_role" "iam_for_lambda" {
 EOF
 }
 
-resource "aws_lambda_function" "test_lambda" {
-  filename      = "lambda_function_payload.zip"
-  function_name = "lambda_function_name"
-  role          = "${aws_iam_role.iam_for_lambda.arn}"
-  handler       = "exports.test"
+locals {
+  jarfile = "../build/libs/coepi-backend-kotlin-1.0.0-all.jar"
+}
 
-  # The filebase64sha256() function is available in Terraform 0.11.12 and later
-  # For Terraform 0.11.11 and earlier, use the base64sha256() function and the file() function:
-  # source_code_hash = "${base64sha256(file("lambda_function_payload.zip"))}"
-  source_code_hash = "${filebase64sha256("lambda_function_payload.zip")}"
+resource "aws_lambda_function" "coepi_lambda" {
+  filename      = local.jarfile
+  function_name = "CoEpiServerLambda"
+  role          = aws_iam_role.coepi_lambda_backend_role.arn
+  handler       = "org.coepi.api.CoEpiHandler::handleRequest"
 
-  runtime = "nodejs12.x"
+  source_code_hash = filebase64sha256(local.jarfile)
 
-  environment {
-    variables = {
-      foo = "bar"
-    }
-  }
+  runtime = "java11"
+}
+
+//TODO these policy perms could be tightened.
+resource "aws_iam_policy" "lambda_dynamodb_access" {
+  name        = "coepi_lambda_dynamodb_policy"
+  path        = "/"
+  description = "IAM policy for DynamoDB access from lambda"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "dynamodb:DeleteItem",
+                    "dynamodb:DescribeContributorInsights",
+                    "dynamodb:RestoreTableToPointInTime",
+                    "dynamodb:ListTagsOfResource",
+                    "dynamodb:UpdateContributorInsights",
+                    "dynamodb:UpdateContinuousBackups",
+                    "dynamodb:TagResource",
+                    "dynamodb:DescribeTable",
+                    "dynamodb:GetItem",
+                    "dynamodb:DescribeContinuousBackups",
+                    "dynamodb:BatchGetItem",
+                    "dynamodb:UpdateTimeToLive",
+                    "dynamodb:BatchWriteItem",
+                    "dynamodb:ConditionCheckItem",
+                    "dynamodb:UntagResource",
+                    "dynamodb:PutItem",
+                    "dynamodb:Scan",
+                    "dynamodb:Query",
+                    "dynamodb:DescribeStream",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:DescribeTimeToLive",
+                    "dynamodb:DescribeGlobalTableSettings",
+                    "dynamodb:GetShardIterator",
+                    "dynamodb:DescribeGlobalTable",
+                    "dynamodb:RestoreTableFromBackup",
+                    "dynamodb:DescribeBackup",
+                    "dynamodb:GetRecords",
+                    "dynamodb:DescribeTableReplicaAutoScaling"
+                ],
+                "Resource": "*"
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "dynamodb:DescribeReservedCapacityOfferings",
+                    "dynamodb:DescribeReservedCapacity",
+                    "dynamodb:PurchaseReservedCapacityOfferings",
+                    "dynamodb:DescribeLimits",
+                    "dynamodb:ListStreams"
+                ],
+                "Resource": "*"
+            }
+        ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_dynamodb_policy_attachment" {
+  role       = aws_iam_role.coepi_lambda_backend_role.name
+  policy_arn = aws_iam_policy.lambda_dynamodb_access.arn
 }
