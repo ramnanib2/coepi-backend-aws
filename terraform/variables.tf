@@ -18,3 +18,9 @@ variable "api_spec_path" {
   type = string
   description = "Path to the API Swagger/OpenAPI definition being used"
 }
+
+variable "cloudwatch_policy_arn" {
+  type = string
+  description = "ARN for the Lambda cloudwatch access policy"
+  default = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}

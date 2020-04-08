@@ -98,6 +98,11 @@ resource "aws_iam_role_policy_attachment" "lambda_dynamodb_policy_attachment" {
   policy_arn = aws_iam_policy.lambda_dynamodb_access.arn
 }
 
+resource "aws_iam_role_policy_attachment" "lambda_cloudwatch_policy_attachment" {
+  role       = aws_iam_role.coepi_lambda_backend_role.name
+  policy_arn = var.cloudwatch_policy_arn
+}
+
 resource "aws_lambda_permission" "lambda_apigateway" {
    statement_id  = "AllowAPIGatewayInvoke"
    action        = "lambda:InvokeFunction"
