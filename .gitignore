@@ -3,3 +3,5 @@
 .swagger-codegen*
 Dockerfile*
 .terraform
+*.tfstate*
+/build/
