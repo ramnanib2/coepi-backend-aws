@@ -29,7 +29,8 @@ resource "aws_lambda_function" "coepi_lambda" {
   handler       = "org.coepi.api.CoEpiHandler::handleRequest"
 
   source_code_hash = filebase64sha256(local.jarfile)
-
+  memory_size = 512
+  timeout = 10
   runtime = "java11"
 }
 
