@@ -15,16 +15,6 @@ resource "aws_dynamodb_table" "coapi-dynamodb-table" {
     type = "N"
   }
 
-  # attribute {
-  #   name = "cenKeys"
-  #   type = "S"
-  # }
-
-  # attribute {
-  #   name = "report"
-  #   type = "B"
-  # }
-
   tags = {
     Name        = var.appName
     Environment = var.env
