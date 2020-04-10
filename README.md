@@ -26,7 +26,9 @@ Then, run:
 
 1. Ensure you have the AWS CLI configured, working, and pointing to the default AWS
    account you wish to deploy to.
-2. Install Terraform 0.12 or newer
+2. [Install Terraform](https://www.terraform.io/downloads.html) 0.12 or newer
+   (Recommendation is to install via Choco for Windows/Homebrew for macOS/package managers for
+   *nix)
 3. Run the Build step above
 4. `cd` to the `terraform` folder in this repo
 5. Run `terraform init && terraform plan` to see what changes will be applied to
