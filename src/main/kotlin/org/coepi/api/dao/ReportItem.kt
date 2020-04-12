@@ -5,9 +5,12 @@ import com.amazonaws.services.dynamodbv2.datamodeling.*
 @DynamoDBTable(tableName = "Reports")
 data class ReportItem (
         @DynamoDBHashKey
-        var did: String = "",
+        var reportId: String = "",
 
         @DynamoDBRangeKey
+        var randomId: String = "",
+
+        @DynamoDBAttribute
         var reportTimestamp: Long = 0,
 
         @DynamoDBAttribute

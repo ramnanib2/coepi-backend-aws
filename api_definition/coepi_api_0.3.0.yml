@@ -8,10 +8,6 @@ info:
     name: MIT License
     url: https://github.com/Co-Epi/data-models/blob/master/LICENSE
 
-servers:
-- url: https://api.example.com/v3 #TODO: Update once the server is set up and deployed
-  description: URL Endpoint used for dev/test
-
 paths:
   /cenreport:
     post:
@@ -34,7 +30,7 @@ paths:
                   items:
                     $ref: '#/components/schemas/CenKey'
                   minItems: 1
-                  maxItems: 10 # TODO: Discuss appropriate value
+                  maxItems: 100 # TODO: Discuss appropriate value
                   uniqueItems: true
               example:
                 report: "c2V2ZXJlIGZldmVyLGNvdWdoaW5nLGhhcmQgdG8gYnJlYXRoZQ=="
@@ -53,25 +49,36 @@ paths:
 
 
     get:
-      summary: Returns a list of reports generated between a timestamp range provided through query paramaters. If no range is provided, the returns all reports for the current day. If only timestampLower is provided, returns all reports in the range [timestampLower, now]. Range cannot be greater than 5 days.
+      summary: Returns a list of reports generated for a given day and batch number.
+
+      description: Batch number is a positive integer value that corresponds to all reports generated during a
+          fixed time interval, where the first interval starts at 1. The fixed-interval length is currently 6 hours.
+          Example, batch 1 for date 2020-04-04 will return all reports generated from
+          2020-04-04T00:00:00 UTC to 2020-04-04T06:00:00 UTC, inclusive.
+
       parameters:
       - in: query
-        name: timestampLower
-        description: Lower limit timestamp in UTC for which we need the reports. If not provided, returns all reports for current timestamp
+        name: date
+        description: Date in RFC3339 standard in UTC, without the time component. If not provided, default value of today's
+            date is used.
         required: false
         schema:
-          $ref: '#/components/schemas/Timestamp'
-        example: 1585326048
+          type: string
+          format: date
+        example: 2020-05-04
       - in: query
-        name: timestampUpper
-        description: Upper limit timestamp in UTC for which we need the reports. If not specified, default is the current timestamp
+        name: batchNumber
+        description: Batch number is a positive integer
+          value that corresponds to all reports generated during a fixed time interval, where the first interval starts
+          at 1. If not provided, then the latest batch number for the specified date (or current date, if not specified)
+          is used.
         required: false
         schema:
-          $ref: '#/components/schemas/Timestamp'
-        example: 1585327048
+          type: integer
+        example: 2
       responses:
         '200':
-          description: List of infection/symptom reports generated during the hour of the specified timestamp
+          description: List of infection/symptom reports generated during the specified date and batch number
           content:
             application/json:
               schema:
@@ -94,12 +101,6 @@ components:
       maxLength: 100 #TODO: Discuss appropriate value and also a possibly an expected pattern
       example: "67f48de38f35c231e34e533649ecbfeb"
 
-    Timestamp:
-      type: integer
-      description: Timestamp in unix epoch format. It is the number of seconds that have elapsed since the Unix epoch, that is the time 00:00:00 UTC on 1 January 1970, minus leap seconds.
-      minimum: 0
-      example: 1585551684
-
     Report:
       type: object
       description: Infection report representing symptoms and/or positive infection incident
@@ -120,10 +121,7 @@ components:
           description: CEN Keys belonging to the device that publushed the report
           items:
             $ref: '#/components/schemas/CenKey'
-        reportTimestamp:
-          $ref: '#/components/schemas/Timestamp'
       example:
         reportId: "6d68785abd6f99ea646fd7c775a14a36f7cec7635a76d3b5554908c6c3a09af5"
         report: "c2V2ZXJlIGZldmVyLGNvdWdoaW5nLGhhcmQgdG8gYnJlYXRoZQ=="
         cenKeys: [ "2cb87ba2f39a3119e4096cc6e04e68a8","4bb5c242916d923fe3565bd5c6b09dd3" ]
-        reportTimestamp: 1585326048

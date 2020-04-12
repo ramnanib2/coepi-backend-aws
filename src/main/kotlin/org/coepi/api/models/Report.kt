@@ -12,9 +12,7 @@
 
 /**
  * Infection report representing symptoms and/or positive infection incident * @param reportId Unique Identifier of the infection report * @param report Content of the infection report consisting of symptoms and/or positive infection incident. Base64 encoded * @param cenKeys CEN Keys belonging to the device that publushed the report * @param reportTimestamp */
-data class Report (    /* Unique Identifier of the infection report */
-        var reportId: kotlin.String? = null,    /* Content of the infection report consisting of symptoms and/or positive infection incident. Base64 encoded */
-        var report: ByteArray? = null,    /* CEN Keys belonging to the device that publushed the report */
-        var cenKeys: kotlin.Array<CenKey>? = null,
-        var reportTimestamp: java.sql.Timestamp? = null
+data class Report (
+        var report: ByteArray? = null,
+        var cenKeys: kotlin.Array<CenKey>? = null
 )
