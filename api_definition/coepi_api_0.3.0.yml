@@ -43,6 +43,10 @@ paths:
               - report
               - cenKeys
 
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
       responses:
         '200':
           description: The report was submitted successfully
@@ -69,6 +73,12 @@ paths:
         schema:
           $ref: '#/components/schemas/Timestamp'
         example: 1585327048
+
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        uri: ${lambda_invoke_arn}
+        httpMethod: GET
+
       responses:
         '200':
           description: List of infection/symptom reports generated during the hour of the specified timestamp
