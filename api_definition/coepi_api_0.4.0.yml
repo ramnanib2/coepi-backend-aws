@@ -1,0 +1,88 @@
+openapi: 3.0.3
+
+info:
+  description: This is the API model for CoEpi Server
+  version: 0.4.0
+  title: CoEpi Server
+  license:
+    name: MIT License
+    url: https://github.com/Co-Epi/data-models/blob/master/LICENSE
+
+paths:
+  /tcnreport:
+    post:
+      summary: Submit symptom or infection report
+      description: Users submit symptom / infection reports and reveal the secret TCN Key in their application
+        as bytes in format 'rvk || tck_{j1-1} || le_u16(j1) || le_u16(j2) || memo'. Details of the TCN protocol
+        can be found here, https://github.com/TCNCoalition/TCN/blob/main/README.md
+
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+              format: byte
+
+      responses:
+        '200':
+          description: The report was submitted successfully
+        '400':
+          description: The report is not encoded in the correct format
+        '401':
+          description: The report signature validation has failed
+        '500':
+          description: Internal Server Error
+
+
+    get:
+      summary: Returns a list of reports generated for a given interval number.
+
+      description: Interval number is a positive integer that corresponds to a specific fixed time interval and can
+        be calculated as (unix_time / time_interval_ms). Current value of time_interval_ms is (6 * 3600 * 1000) or 6 hours.
+        When not provided, returns the reports corresponding to the latest interval batch.
+
+      parameters:
+      - in: query
+        name: date
+        description: Date in RFC3339 standard in UTC, without the time component. If not provided, default value of today's
+          date is used
+        required: false
+        schema:
+          type: string
+          format: date
+        example: 2020-05-04
+
+      - in: query
+        name: intervalNumber
+        description: Positive integer that corresponds to a specific fixed time interval and can
+          be calculated as (unix_time / time_interval_ms)
+        required: false
+        schema:
+          type: integer
+        example: 73457
+      - in: query
+        name: intervalLengthMs
+        description: The interval length in milliseconds used by the client to calculate intervalNumber.
+          The server will respond with a 401 if the interval length does not match the expected length.
+        required: false
+        schema:
+          type: integer
+        example: 21600000
+      responses:
+        '200':
+          description: List of infection/symptom reports generated during the specified date and intervalNumber
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+        '400':
+          description: Request Parameter Invalid
+        '401':
+          description: intervalLengthMs is not valid for the specified date
+        '500':
+          description: Internal Server Error
+
