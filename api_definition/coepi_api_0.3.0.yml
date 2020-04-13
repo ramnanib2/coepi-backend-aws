@@ -77,7 +77,7 @@ paths:
       x-amazon-apigateway-integration:
         type: aws_proxy
         uri: ${lambda_invoke_arn}
-        httpMethod: GET
+        httpMethod: POST
 
       responses:
         '200':
