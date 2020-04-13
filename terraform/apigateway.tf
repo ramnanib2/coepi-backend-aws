@@ -4,8 +4,6 @@ data "template_file" "coepi_api_swagger" {
   # #Pass the varible value if needed in swagger file
   vars = {
    lambda_invoke_arn = aws_lambda_function.coepi_lambda.invoke_arn
-   # lambda_invoke_role           = "${var.type}"
-   # backend_uri   = "https://api.endpoint.url"
   }
 }
 
