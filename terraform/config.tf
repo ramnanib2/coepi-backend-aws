@@ -6,6 +6,10 @@ terraform {
 
   }
 
+  backend "s3" {
+    bucket = "tf-coepi-backend-bucket"
+    key    = "prd/tfstate"
+  }
 }
 
 provider "aws" {

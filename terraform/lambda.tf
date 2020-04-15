@@ -1,5 +1,5 @@
 resource "aws_iam_role" "coepi_lambda_backend_role" {
-  name = "iam_for_coepi_lambda"
+  name = "iam_for_coepi_lambda_${var.region}"
 
   assume_role_policy = <<EOF
 {
@@ -29,14 +29,14 @@ resource "aws_lambda_function" "coepi_lambda" {
   handler       = "org.coepi.api.CoEpiHandler::handleRequest"
 
   source_code_hash = filebase64sha256(local.jarfile)
-  memory_size = 512
-  timeout = 10
-  runtime = "java11"
+  memory_size      = 512
+  timeout          = 10
+  runtime          = "java11"
 }
 
 //TODO these policy perms could be tightened.
 resource "aws_iam_policy" "lambda_dynamodb_access" {
-  name        = "coepi_lambda_dynamodb_policy"
+  name        = "coepi_lambda_dynamodb_policy_${var.region}"
   path        = "/"
   description = "IAM policy for DynamoDB access from lambda"
 
@@ -76,7 +76,10 @@ resource "aws_iam_policy" "lambda_dynamodb_access" {
                     "dynamodb:GetRecords",
                     "dynamodb:DescribeTableReplicaAutoScaling"
                 ],
-                "Resource": "*"
+                "Resource": [
+                    "${aws_dynamodb_table.coapi-dynamodb-table.arn}",
+                    "${aws_dynamodb_table.tcn-dynamodb-table.arn}"
+                ]
             },
             {
                 "Effect": "Allow",
@@ -87,7 +90,10 @@ resource "aws_iam_policy" "lambda_dynamodb_access" {
                     "dynamodb:DescribeLimits",
                     "dynamodb:ListStreams"
                 ],
-                "Resource": "*"
+                "Resource": [
+                    "${aws_dynamodb_table.coapi-dynamodb-table.arn}",
+                    "${aws_dynamodb_table.tcn-dynamodb-table.arn}"
+                ]
             }
         ]
 }
@@ -105,12 +111,12 @@ resource "aws_iam_role_policy_attachment" "lambda_cloudwatch_policy_attachment" 
 }
 
 resource "aws_lambda_permission" "lambda_apigateway" {
-   statement_id  = "AllowAPIGatewayInvoke"
-   action        = "lambda:InvokeFunction"
-   function_name = aws_lambda_function.coepi_lambda.function_name
-   principal     = "apigateway.amazonaws.com"
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.coepi_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
 
-   # The "/*/*" portion grants access from any method on any resource
-   # within the API Gateway REST API.
-   source_arn = "${aws_api_gateway_rest_api.coepi_api_gateway.execution_arn}/*/*"
- }
+  # The "/*/*" portion grants access from any method on any resource
+  # within the API Gateway REST API.
+  source_arn = "${aws_api_gateway_rest_api.coepi_api_gateway.execution_arn}/*/*"
+}
