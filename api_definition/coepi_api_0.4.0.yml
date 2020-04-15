@@ -1,9 +1,9 @@
 openapi: 3.0.3
 
 info:
-  description: This is the API model for CoEpi Server
+  description: This is the API model for TCN Server, https://github.com/TCNCoalition/TCN/blob/main/README.md, protocol 0.4.0
   version: 0.4.0
-  title: CoEpi Server
+  title: TCN Server
   license:
     name: MIT License
     url: https://github.com/Co-Epi/data-models/blob/master/LICENSE
