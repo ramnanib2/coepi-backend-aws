@@ -31,10 +31,15 @@ Then, run:
    *nix)
 3. Run the Build step above
 4. `cd` to the `terraform` folder in this repo
-5. Run `terraform init && terraform plan` to see what changes will be applied to
+5. Create an S3 bucket to store Terraform's statefile: `aws s3api create-bucket --bucket tf-coepi-backend-bucket --region us-east-1`
+6. Run `terraform init -backend-config="region=us-east-1"` to tell Terraform to
+   use the state bucket you created in `us-east-1`
+7. Run `terraform plan` to see what changes will be applied to
    your AWS account
-6. Run `terraform apply -auto-approve` to make the changes and deploy the
+8. Run `terraform apply -auto-approve` to make the changes and deploy the
    server.
+9. When the Terraform scripts are updated or you wish to redeploy, repeat steps
+   7 and 8.
 
 The API Gateway root URL will be echoed to the shell, and you can CURL the
 deployed API:
