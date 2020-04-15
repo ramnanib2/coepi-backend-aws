@@ -52,7 +52,6 @@ curl -X GET https://e6f2c4llfk.execute-api.us-west-1.amazonaws.com/v4/tcnreport
 ```
 
 #### v3
-
 ```sh
 curl -X POST https://q69c4m2myb.execute-api.us-west-2.amazonaws.com/v3/cenreport -d '{ "report": "dWlyZSBhdXRob3JgdsF0aW9uLgo=", "cenKeys": [ "baz", "das" ]}'
 
@@ -90,3 +89,4 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**cenreportPost**](docs/DefaultApi.md#cenreportpost) | **POST** /cenreport | Submit symptom or infection report
 [**cenreportTimestampLowerTimestampUpperGet**](docs/DefaultApi.md#cenreporttimestamplowertimestampupperget) | **GET** /cenreport?timestampLower={tsLower}&timestampUpper={tsUpper} | Returns a list of reports generated between a timestamp range
+
