@@ -14,9 +14,14 @@ variable "env" {
   description = "Name of the environment class this app is deployed to (staging, test, prod, etc)"
 }
 
-variable "api_spec_path" {
+variable "api_spec_path_v3" {
   type        = string
-  description = "Path to the API Swagger/OpenAPI definition being used"
+  description = "Path to the API Swagger/OpenAPI definition being used for CoEpi back-end v3"
+}
+
+variable "api_spec_path_v4" {
+  type        = string
+  description = "Path to the API Swagger/OpenAPI definition being used for TCN Server back-end v3"
 }
 
 variable "cloudwatch_policy_arn" {

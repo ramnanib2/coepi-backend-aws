@@ -24,6 +24,11 @@ paths:
               type: string
               format: byte
 
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+
       responses:
         '200':
           description: The report was submitted successfully
@@ -69,6 +74,12 @@ paths:
         schema:
           type: integer
         example: 21600000
+
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+
       responses:
         '200':
           description: List of infection/symptom reports generated during the specified date and intervalNumber

@@ -39,6 +39,15 @@ Then, run:
 The API Gateway root URL will be echoed to the shell, and you can CURL the
 deployed API:
 
+#### v4
+
+```sh
+curl -X POST https://e6f2c4llfk.execute-api.us-west-1.amazonaws.com/v4/tcnreport -d "ZXlKMFpYTjBJam9pWW05a2VTSjk="
+curl -X GET https://e6f2c4llfk.execute-api.us-west-1.amazonaws.com/v4/tcnreport
+```
+
+#### v3
+
 ```sh
 curl -X POST https://q69c4m2myb.execute-api.us-west-2.amazonaws.com/v3/cenreport -d '{ "report": "dWlyZSBhdXRob3JgdsF0aW9uLgo=", "cenKeys": [ "baz", "das" ]}'
 
@@ -60,17 +69,19 @@ https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/s
 ## Documentation for API Endpoints
 
 Swagger Definition and API documentation is located
-under [**api_definition**](api_definition/coepi_api_0.3.0.yml) folder:
+under [**api_definition**](api_definition) folder:
 
 The API can be tested by pasting the definition on [Swagger Editor](http://editor.swagger.io/)
+
+### v4
+Method | HTTP request | Description
+------------- | ------------- | -------------
+[**tcnreportPost**](docs/DefaultApi.md#cenreportpost) | **POST** /tcnreport | Submit symptom or infection report following TCN 0.4.0 protocol
+[**tcnreportGet**](docs/DefaultApi.md#cenreporttimestamplowertimestampupperget) | **GET** /tcnreport?date={report_date}?intervalNumber={interval}?intervalLengthMs={interval_length_ms}| Returns a list of reports generated on the specified date and interval
+
 
 ### v3
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**cenreportPost**](docs/DefaultApi.md#cenreportpost) | **POST** /cenreport | Submit symptom or infection report
 [**cenreportTimestampLowerTimestampUpperGet**](docs/DefaultApi.md#cenreporttimestamplowertimestampupperget) | **GET** /cenreport?timestampLower={tsLower}&timestampUpper={tsUpper} | Returns a list of reports generated between a timestamp range
-
-### TO DO
-
-1. Add documentation for running on AWS Lambda
-2. Add a cloud formation template for automated deployment of the infrastructure in a new AWS account
