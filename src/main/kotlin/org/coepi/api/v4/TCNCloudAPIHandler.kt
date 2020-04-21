@@ -72,9 +72,8 @@ class TCNCloudAPIHandler: RequestHandler<APIGatewayProxyRequestEvent, APIGateway
 
             val reports = reportsDao.queryReports(date, intervalNumber)
                     .map {
-                        record -> Base64.getEncoder().encode(record.report)
+                        record -> Base64.getEncoder().encodeToString(record.report)
                     }
-
             body = objectMapper.writeValueAsString(reports)
             statusCode = 200
         } catch (ex: TCNClientException) {
